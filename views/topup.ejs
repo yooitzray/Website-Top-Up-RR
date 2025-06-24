@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Top Up</title>
+</head>
+<body>
+  <h1>Top Up Sekarang</h1>
+  <form method="POST" action="/topup">
+    <label>User ID:</label><br>
+    <input type="text" name="userId" required><br><br>
+
+    <label>Game:</label><br>
+    <select name="game">
+      <option value="MLBB">Mobile Legends</option>
+      <option value="PUBG">PUBG Mobile</option>
+    </select><br><br>
+
+    <label>Nominal:</label><br>
+    <select name="nominal">
+      <option value="60 Diamonds">60 Diamonds</option>
+      <option value="300 Diamonds">300 Diamonds</option>
+    </select><br><br>
+
+    <label>Metode Pembayaran:</label><br>
+    <select name="payment">
+      <option value="DANA">DANA</option>
+      <option value="OVO">OVO</option>
+      <option value="Bank">Transfer Bank</option>
+    </select><br><br>
+
+    <button type="submit">Beli Sekarang</button>
+  </form>
+</body>
+</html>
