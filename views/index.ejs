@@ -1,25 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Top Up Game</title>
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-  <header>
-    <h1>Top Up Game Murah</h1>
-    <nav>
-      <a href="/">Home</a> |
-      <a href="/topup">Top Up</a>
-    </nav>
-  </header>
-  <main>
-    <h2>Game Populer</h2>
-    <div class="game-list">
-      <a href="/topup"><img src="/images/mlbb.png" alt="MLBB"></a>
-      <a href="/topup"><img src="/images/pubg.png" alt="PUBG"></a>
-      <!-- Tambah game lainnya -->
+import { Link } from 'react-router-dom'
+
+export default function Home() {
+  const games = ['mlbb', 'pubg', 'freefire']
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Pilih Game</h1>
+      <div className="grid grid-cols-2 gap-4">
+        {games.map(game => (
+          <Link key={game} to={`/topup/${game}`} className="p-4 border rounded shadow hover:bg-gray-100">
+            Top Up {game.toUpperCase()}
+          </Link>
+        ))}
+      </div>
     </div>
-  </main>
-</body>
-</html>
+  )
+}
