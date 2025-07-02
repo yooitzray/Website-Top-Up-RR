@@ -20,7 +20,9 @@ export default function Home() {
             <img src={game.image} alt={game.name} className="w-full h-40 object-cover" />
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{game.name}</h2>
-              <Link to="#" className="text-blue-600 hover:underline text-sm">Lihat Detail</Link>
+              <Link to={`/topup/${game.id}`} className="text-blue-600 hover:underline text-sm">
+                Top Up Sekarang
+              </Link>
             </div>
           </div>
         ))}
