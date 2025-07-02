@@ -1,35 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Form Top Up</title>
-</head>
-<body>
-  <h1>Top Up Sekarang</h1>
-  <form method="POST" action="/topup">
-    <label>User ID:</label><br>
-    <input type="text" name="userId" required><br><br>
+import { useParams, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
-    <label>Game:</label><br>
-    <select name="game">
-      <option value="MLBB">Mobile Legends</option>
-      <option value="PUBG">PUBG Mobile</option>
-    </select><br><br>
+export default function GameTopup() {
+  const { game } = useParams()
+  const [products, setProducts] = useState([])
+  const [userId, setUserId] = useState('')
+  const [serverId, setServerId] = useState('')
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [paymentMethod, setPaymentMethod] = useState('qris')
+  const navigate = useNavigate()
 
-    <label>Nominal:</label><br>
-    <select name="nominal">
-      <option value="60 Diamonds">60 Diamonds</option>
-      <option value="300 Diamonds">300 Diamonds</option>
-    </select><br><br>
+  useEffect(() => {
+    axios.get(`/api/products/${game}`).then(res => setProducts(res.data))
+  }, [game])
 
-    <label>Metode Pembayaran:</label><br>
-    <select name="payment">
-      <option value="DANA">DANA</option>
-      <option value="OVO">OVO</option>
-      <option value="Bank">Transfer Bank</option>
-    </select><br><br>
+  const handleOrder = () => {
+    if (!userId) {
+      alert('User ID harus diisi')
+      return
+    }
+    if (!selectedProduct) {
+      alert('Pilih produk terlebih dahulu')
+      return
+    }
+    axios.post('/api/order', {
+      userId,
+      serverId,
+      sku: selectedProduct.sku,
+      paymentMethod
+    }).then(res => {
+      if (res.data.success) {
+        navigate(`/payment/${res.data.orderId}`)
+      } else {
+        alert('Order gagal, coba lagi')
+      }
+    }).catch(() => alert('Terjadi kesalahan jaringan'))
+  }
 
-    <button type="submit">Beli Sekarang</button>
-  </form>
-</body>
-</html>
+  return (
+    <div className="p-6 max-w-md mx-auto">
+      <h1 className="text-xl font-bold mb-4">Top Up {game.toUpperCase()}</h1>
+      <input
+        className="input w-full mb-2"
+        placeholder="User ID"
+        value={userId}
+        onChange={e => setUserId(e.target.value)}
+      />
+      <input
+        className="input w-full mb-2"
+        placeholder="Server ID (opsional)"
+        value={serverId}
+        onChange={e => setServerId(e.target.value)}
+      />
+
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        {products.map(p => (
+          <div
+            key={p.sku}
+            onClick={() => setSelectedProduct(p)}
+            className={`p-3 border rounded cursor-pointer ${
+              selectedProduct?.sku === p.sku ? 'bg-blue-100' : ''
+            }`}
+          >
+            <div>{p.name}</div>
+            <div className="text-sm text-gray-600">Rp {p.price}</div>
+          </div>
+        ))}
+      </div>
+
+      <select
+        className="select w-full mb-4"
+        value={paymentMethod}
+        onChange={e => setPaymentMethod(e.target.value)}
+      >
+        <option value="qris">QRIS</option>
+        <option value="bca">BCA</option>
+        <option value="dana">DANA</option>
+      </select>
+
+      <button onClick={handleOrder} className="btn btn-primary w-full">
+        Pesan Sekarang
+      </button>
+    </div>
+  )
+}
