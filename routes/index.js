@@ -8,3 +8,11 @@ export default function AppRoutes() {
     </Routes>
   )
 }
+import GameTopup from '../pages/GameTopup'
+
+//...
+
+<Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/topup/:game" element={<GameTopup />} />
+</Routes>
